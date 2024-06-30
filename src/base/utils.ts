@@ -39,4 +39,18 @@ export class Utils {
         this.commandsDeploy()
     
     }
+    loadEvents(){
+        const eventFiles = fs.readdirSync(path.join(__dirname, '../events')).filter(file => file.endsWith('.ts'));
+
+        for (const file of eventFiles) {
+          const eventFile = require(`../events/${file}`);
+          const event = eventFile?.default
+          if(!event) continue;
+          if (event?.once) {
+            this.client.once(event.name, (...args: unknown[]) => event.execute(this, ...args));
+          } else {
+            this.client.on(event.name, (...args: unknown[]) => event.execute(this, ...args));
+          }
+        }
+    }
 }
