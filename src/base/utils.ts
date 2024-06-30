@@ -3,6 +3,4 @@ export class Utils {
     constructor(client:any){
         this.client = client
     }
-
-    
 }

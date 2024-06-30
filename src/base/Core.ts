@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits } from "discord.js";
 
-export class Core extends Client {
+class Core extends Client {
     constructor(){
         super({
             intents: [
@@ -23,4 +23,8 @@ export class Core extends Client {
             ]
         });
     }
+}
+
+export {
+    Core as Client
 }
