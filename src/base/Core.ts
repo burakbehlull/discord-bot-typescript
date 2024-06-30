@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits } from "discord.js";
-
+import 'dotenv/config'
 class Core extends Client {
     constructor(){
         super({
@@ -22,6 +22,10 @@ class Core extends Client {
                 GatewayIntentBits.MessageContent,
             ]
         });
+    }
+
+    connect(){
+        this.login(process.env.TOKEN)
     }
 }
 
