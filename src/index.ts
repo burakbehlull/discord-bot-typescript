@@ -1,0 +1,1 @@
+console.log('MERHABA DISCORD BOT TS TEMPLATE!')

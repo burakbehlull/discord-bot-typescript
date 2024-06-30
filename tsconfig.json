@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+		"module": "commonjs",
+		"removeComments": true,
+		"allowSyntheticDefaultImports": true,
+		"target": "ES2022",
+		"outDir": "./dist",
+		"baseUrl": "./",
+        "noImplicitAny": true,
+        "resolveJsonModule": true,
+        "sourceMap": true,
+		"incremental": true,
+		"strict": true,
+		"typeRoots": ["node_modules/@types", "src/@types"],
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+	}
+}
