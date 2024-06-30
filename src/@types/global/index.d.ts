@@ -15,7 +15,7 @@ declare global {
         export type EventKeys = keyof ClientEvents;
         export interface IEvent<K extends EventKeys> {
             name: EventKeys;
-            once: boolean;
+            once?: boolean;
             execute: (client: any, ...args: ClientEvents[K]) => Promise<void> | void | any;
         }
     }
