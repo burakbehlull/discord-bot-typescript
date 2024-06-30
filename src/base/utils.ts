@@ -1,7 +1,7 @@
 import { Collection, Routes, REST } from "discord.js";
-import fs from 'fs'
-import path from 'path'
 import 'dotenv/config'
+import { readdirSync, existsSync } from "fs";
+import { join } from "path";
 export class Utils {
     private client:any;
     private ICommands : any[];
@@ -26,9 +26,13 @@ export class Utils {
           }
     }
     loadCommands(){
+        const commandsFilePath = join(__dirname, '..', 'commands')
+        if(!existsSync(commandsFilePath)){
+            console.error('Commands klasörü mevcut değil.')
+            return
+        }
+        const commandFiles = readdirSync(commandsFilePath).filter((file:any) => file.endsWith('.ts'));
         
-        const commandFiles = fs.readdirSync(path.join(__dirname, '..', 'commands')).filter((file:any) => file.endsWith('.ts'));
-
         for (const file of commandFiles) {
             const command = require(`../commands/${file}`);
             if(!command) continue
@@ -40,16 +44,21 @@ export class Utils {
     
     }
     loadEvents(){
-        const eventFiles = fs.readdirSync(path.join(__dirname, '../events')).filter(file => file.endsWith('.ts'));
+        const eventsFilePath = join(__dirname, '..', 'events')
+        if(!existsSync(eventsFilePath)){
+            console.error('Events klasörü mevcut değil.')
+            return
+        }
+        const eventFiles = readdirSync(eventsFilePath).filter(file => file.endsWith('.ts'));
         for (const file of eventFiles) {
-          const eventFile = require(`../events/${file}`);
-          const event = eventFile?.default
-          if(!event) continue;
-          if (event?.once) {
-            this.client.once(event.name, (...args: unknown[]) => event.execute(this, ...args));
-          } else {
-            this.client.on(event.name, (...args: unknown[]) => event.execute(this, ...args));
-          }
+            const eventFile = require(`../events/${file}`);
+            const event = eventFile?.default
+            if(!event) continue;
+            if (event?.once) {
+                this.client.once(event.name, (...args: unknown[]) => event.execute(this, ...args));
+            } else {
+                this.client.on(event.name, (...args: unknown[]) => event.execute(this, ...args));
+            }
         }
     }
 }
