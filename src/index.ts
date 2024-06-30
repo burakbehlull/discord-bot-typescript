@@ -1,3 +1,3 @@
-import { Client } from '@/core'
+import { Client } from '@/base'
 
 new Client().connect()

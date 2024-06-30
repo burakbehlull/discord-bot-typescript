@@ -41,7 +41,6 @@ export class Utils {
     }
     loadEvents(){
         const eventFiles = fs.readdirSync(path.join(__dirname, '../events')).filter(file => file.endsWith('.ts'));
-
         for (const file of eventFiles) {
           const eventFile = require(`../events/${file}`);
           const event = eventFile?.default

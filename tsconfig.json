@@ -18,7 +18,7 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"paths": {
-			"@/core": ["./src/base/Core.ts"],
+			"@/base": ["./src/base/index"],
 		},
 	}
 }
