@@ -1,0 +1,21 @@
+{
+  "name": "discord-bot-typescript-template",
+  "version": "1.0.0",
+  "description": "discord bot written in typescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "typescript",
+    "discord-bot",
+    "discordjs",
+    "discord-ts",
+    "discordjs-template"
+  ],
+  "author": "Burak <burakyabgu@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.15.3"
+  }
+}
