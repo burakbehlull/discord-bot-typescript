@@ -4,7 +4,7 @@ import { readdirSync, existsSync } from "fs";
 import { join } from "path";
 
 export class Utils {
-    private client: Client | any;
+    private client: Client;
     private ISlashCommands : any[];
     slashCommands = new Collection<string, ITypes.ISlashCommand>()
     prefixCommands = new Collection<string, ITypes.IPrefixCommand>()

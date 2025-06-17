@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits } from "discord.js";
+import { Client, GatewayIntentBits, ActivityType } from "discord.js";
 import 'dotenv/config'
 import { Utils } from '@/base'
 class Core extends Client {
@@ -22,7 +22,12 @@ class Core extends Client {
                 GatewayIntentBits.DirectMessageReactions, 
                 GatewayIntentBits.DirectMessageTyping, 
                 GatewayIntentBits.MessageContent,
-            ]
+            ],
+			presence: {
+                activities: [{ name: "@burakbehull", type: ActivityType.Watching }],
+				status: "idle"
+            },
+			
         });
     }
 
