@@ -14,8 +14,23 @@ TOKEN =
 BOT_ID = 
 ```
 
+Usages:
+
+```js
+
+//  one way
+const Hello : ITypes.ISlashCommand = {}
+export default Hello
+
+// two way
+export default {} as ITypes.ISlashCommand
+
+```
+
+
 ### contents:
 * events loader
 * slash commands loader
+* prefix commands loader
 * deploy command
 * defined types
