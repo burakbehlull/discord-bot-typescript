@@ -35,3 +35,13 @@ export default {} as ITypes.ISlashCommand
 * prefix commands loader
 * deploy command
 * defined types
+
+### type usages:
+| type | comment | meets | use |
+| ------ | ------ | ------ | ------ |
+| **IPrefixCommand** | Used for prefix commands | name, execute | {name: "exampleCommand"} as IPrefixCommand |
+| **PrefixCommandArgs** | Is a type given to command values | client, message, args | execute({client, message, args} : PrefixCommandArgs){} |
+| **ISlashCommand** | Used for slash commands | data, execute | {name: "exampleCommand"} as ISlashCommand |
+| **SlashCommandArgs** | Is a type given to command values | client, interaction | execute({client, interaction} : SlashCommandArgs){} |
+| **IEvent** | A type given to event files | name, once, execute | IEvent<ActivityType.ClientReady> |
+
