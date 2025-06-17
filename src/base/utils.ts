@@ -1,4 +1,4 @@
-import { Collection, Routes, REST, Client } from "discord.js";
+import { Collection, Client } from "discord.js";
 import 'dotenv/config';
 import { readdirSync, existsSync, statSync } from "fs";
 import { join } from "path";
@@ -22,7 +22,6 @@ export class Utils {
     private client: Client;
     slashCommands = new Collection<string, ITypes.ISlashCommand>();
     prefixCommands = new Collection<string, ITypes.IPrefixCommand>();
-    rest = new REST({ version: '10' }).setToken(`${process.env.TOKEN}`);
 
     constructor(client: Client) {
         this.client = client;
