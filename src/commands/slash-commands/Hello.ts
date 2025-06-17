@@ -4,7 +4,7 @@ const Hello : ITypes.ISlashCommand = {
     data: new SlashCommandBuilder()
     .setName('hello')
     .setDescription('say hello!'),
-    async execute(interaction:any) {
+    async execute({interaction}:ITypes.SlashCommandArgs) {
         await interaction.reply("hello there!")
     },
 }

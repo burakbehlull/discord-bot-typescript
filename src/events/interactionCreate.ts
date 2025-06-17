@@ -11,7 +11,7 @@ const InteractionCreate : ITypes.IEvent<Events.InteractionCreate> = {
         }
       
         try {
-            await command.execute(interaction);
+            await command.execute({client, interaction});
         } catch (error) {
             console.error('Uygulanmayan komut hatası:', error);
             await interaction.reply({ content: 'Komut uygulanmıyor.', ephemeral: true });

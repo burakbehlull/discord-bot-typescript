@@ -1,4 +1,4 @@
-import { ClientEvents, SlashCommandBuilder, Client, Message } from "discord.js"
+import { ClientEvents, SlashCommandBuilder, Client, Message, ChatInputCommandInteraction } from "discord.js"
 
 export {};
 
@@ -26,7 +26,8 @@ declare global {
         }
         
         export interface SlashCommandArgs {
-            interaction: any;
+			client: Client,
+            interaction: ChatInputCommandInteraction;
         }
 		
 		// events

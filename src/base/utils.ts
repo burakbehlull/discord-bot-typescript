@@ -2,6 +2,7 @@ import { Collection, Routes, REST, Client } from "discord.js";
 import 'dotenv/config'
 import { readdirSync, existsSync } from "fs";
 import { join } from "path";
+
 export class Utils {
     private client: Client | any;
     private ISlashCommands : any[];
@@ -13,6 +14,7 @@ export class Utils {
         this.client = client
         this.ISlashCommands = []
     }
+
     async commandsDeploy(){
         try {
             await this.rest.put(
@@ -20,17 +22,19 @@ export class Utils {
               { body: this.ISlashCommands }
             );
         
-            console.log('Komutlar başarıyla yüklendi.');
-          } catch (error) {
-            console.error(error);
-          }
+            console.log("Slash komutları başarıyla Discord API'ye yüklendi.");
+        } catch (error) {
+            console.error('Slash komutları yüklenirken hata oluştu:', error);
+        }
     }
+
 	loadPrefixCommands(){
         const commandsFilePath = join(__dirname, '..', 'commands', 'prefix-commands')
         if(!existsSync(commandsFilePath)){
-            console.error('Commands klasörü mevcut değil.')
+            console.error('Prefix komut klasörü mevcut değil.')
             return
         }
+
         const commandFiles = readdirSync(commandsFilePath).filter((file:any) => file.endsWith('.ts'));
         
         for (const file of commandFiles) {
@@ -39,13 +43,17 @@ export class Utils {
             const c = command.default
             this.prefixCommands.set(c.name, command?.default);
         }
+
+        console.log(`[${this.prefixCommands.size}] prefix komutu yüklendi.`);
     }
+
     loadSlashCommands(){
         const commandsFilePath = join(__dirname, '..', 'commands', 'slash-commands')
         if(!existsSync(commandsFilePath)){
-            console.error('Commands klasörü mevcut değil.')
+            console.error('Slash komut klasörü mevcut değil.')
             return
         }
+
         const commandFiles = readdirSync(commandsFilePath).filter((file:any) => file.endsWith('.ts'));
         
         for (const file of commandFiles) {
@@ -55,16 +63,21 @@ export class Utils {
             this.ISlashCommands.push(c.toJSON());
             this.slashCommands.set(c.name, command?.default);
         }
+
+        console.log(`[${this.slashCommands.size}] slash komutu yüklendi.`);
+
         this.commandsDeploy()
-    
     }
+
     loadEvents(){
         const eventsFilePath = join(__dirname, '..', 'events')
         if(!existsSync(eventsFilePath)){
             console.error('Events klasörü mevcut değil.')
             return
         }
+
         const eventFiles = readdirSync(eventsFilePath).filter(file => file.endsWith('.ts'));
+
         for (const file of eventFiles) {
             const eventFile = require(`../events/${file}`);
             const event = eventFile?.default
@@ -75,5 +88,7 @@ export class Utils {
                 this.client.on(event.name, (...args: unknown[]) => event.execute(this, ...args));
             }
         }
+
+        console.log(`[${eventFiles.length}] event yüklendi.`);
     }
 }
