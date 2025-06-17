@@ -1,94 +1,110 @@
 import { Collection, Routes, REST, Client } from "discord.js";
-import 'dotenv/config'
-import { readdirSync, existsSync } from "fs";
+import 'dotenv/config';
+import { readdirSync, existsSync, statSync } from "fs";
 import { join } from "path";
+
+function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
+    const files = readdirSync(dirPath);
+
+    for (const file of files) {
+        const fullPath = join(dirPath, file);
+        if (statSync(fullPath).isDirectory()) {
+            getAllFiles(fullPath, arrayOfFiles);
+        } else if (file.endsWith('.ts')) {
+            arrayOfFiles.push(fullPath);
+        }
+    }
+
+    return arrayOfFiles;
+}
 
 export class Utils {
     private client: Client;
-    private ISlashCommands : any[];
-    slashCommands = new Collection<string, ITypes.ISlashCommand>()
-    prefixCommands = new Collection<string, ITypes.IPrefixCommand>()
-    rest = new REST({version: '10'}).setToken(`${process.env.TOKEN}`);
-	
-    constructor(client: Client){
-        this.client = client
-        this.ISlashCommands = []
+    private ISlashCommands: any[];
+    slashCommands = new Collection<string, ITypes.ISlashCommand>();
+    prefixCommands = new Collection<string, ITypes.IPrefixCommand>();
+    rest = new REST({ version: '10' }).setToken(`${process.env.TOKEN}`);
+
+    constructor(client: Client) {
+        this.client = client;
+        this.ISlashCommands = [];
     }
 
-    async commandsDeploy(){
+    async commandsDeploy() {
         try {
             await this.rest.put(
-              Routes.applicationCommands(`${process.env.BOT_ID}`),
-              { body: this.ISlashCommands }
+                Routes.applicationCommands(`${process.env.BOT_ID}`),
+                { body: this.ISlashCommands }
             );
-        
             console.log("Slash komutları başarıyla Discord API'ye yüklendi.");
         } catch (error) {
             console.error('Slash komutları yüklenirken hata oluştu:', error);
         }
     }
 
-	loadPrefixCommands(){
-        const commandsFilePath = join(__dirname, '..', 'commands', 'prefix-commands')
-        if(!existsSync(commandsFilePath)){
-            console.error('Prefix komut klasörü mevcut değil.')
-            return
+    loadPrefixCommands() {
+        const commandsFilePath = join(__dirname, '..', 'commands', 'prefix-commands');
+        if (!existsSync(commandsFilePath)) {
+            console.error('Prefix komut klasörü mevcut değil.');
+            return;
         }
 
-        const commandFiles = readdirSync(commandsFilePath).filter((file:any) => file.endsWith('.ts'));
-        
-        for (const file of commandFiles) {
-            const command = require(`../commands/prefix-commands/${file}`);
-            if(!command) continue
-            const c = command.default
-            this.prefixCommands.set(c.name, command?.default);
+        const commandFiles = getAllFiles(commandsFilePath);
+
+        for (const filePath of commandFiles) {
+            const command = require(filePath);
+            if (!command) continue;
+            const c = command.default;
+            this.prefixCommands.set(c.name, c);
         }
 
         console.log(`[${this.prefixCommands.size}] prefix komutu yüklendi.`);
     }
 
-    loadSlashCommands(){
-        const commandsFilePath = join(__dirname, '..', 'commands', 'slash-commands')
-        if(!existsSync(commandsFilePath)){
-            console.error('Slash komut klasörü mevcut değil.')
-            return
+    loadSlashCommands() {
+        const commandsFilePath = join(__dirname, '..', 'commands', 'slash-commands');
+        if (!existsSync(commandsFilePath)) {
+            console.error('Slash komut klasörü mevcut değil.');
+            return;
         }
 
-        const commandFiles = readdirSync(commandsFilePath).filter((file:any) => file.endsWith('.ts'));
-        
-        for (const file of commandFiles) {
-            const command = require(`../commands/slash-commands/${file}`);
-            if(!command) continue
-            const c = command.default?.data
+        const commandFiles = getAllFiles(commandsFilePath);
+
+        for (const filePath of commandFiles) {
+            const command = require(filePath);
+            if (!command) continue;
+            const c = command.default?.data;
             this.ISlashCommands.push(c.toJSON());
-            this.slashCommands.set(c.name, command?.default);
+            this.slashCommands.set(c.name, command.default);
         }
 
         console.log(`[${this.slashCommands.size}] slash komutu yüklendi.`);
 
-        this.commandsDeploy()
+        this.commandsDeploy();
     }
 
-    loadEvents(){
-        const eventsFilePath = join(__dirname, '..', 'events')
-        if(!existsSync(eventsFilePath)){
-            console.error('Events klasörü mevcut değil.')
-            return
-        }
+    loadEvents() {
+		const eventsFilePath = join(__dirname, '..', 'events');
+		if (!existsSync(eventsFilePath)) {
+			console.error('Events klasörü mevcut değil.');
+			return;
+		}
 
-        const eventFiles = readdirSync(eventsFilePath).filter(file => file.endsWith('.ts'));
+		const eventFiles = getAllFiles(eventsFilePath);
 
-        for (const file of eventFiles) {
-            const eventFile = require(`../events/${file}`);
-            const event = eventFile?.default
-            if(!event) continue;
-            if (event?.once) {
-                this.client.once(event.name, (...args: unknown[]) => event.execute(this, ...args));
-            } else {
-                this.client.on(event.name, (...args: unknown[]) => event.execute(this, ...args));
-            }
-        }
+		for (const filePath of eventFiles) {
+			const eventFile = require(filePath);
+			const event = eventFile?.default;
+			if (!event || !event.name || typeof event.execute !== "function") continue;
 
-        console.log(`[${eventFiles.length}] event yüklendi.`);
-    }
+			if (event.once) {
+				this.client.once(event.name, (...args: unknown[]) => event.execute(this, ...args));
+			} else {
+				this.client.on(event.name, (...args: unknown[]) => event.execute(this, ...args));
+			}
+		}
+
+		console.log(`[${eventFiles.length}] event yüklendi.`);
+	}
+
 }

@@ -4,8 +4,7 @@
 
 | Command | Comment |
 | ------ | ------ | 
-| npm run build | Compiles typescript files to javascript |
-| npm start | Runs compiled javascript files |
+| npm start | Runs discord bot |
 
 Fill in the ` .env ` file within the project with your information:
 
