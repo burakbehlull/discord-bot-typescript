@@ -1,9 +1,11 @@
 import { Events } from 'discord.js'
 
-const MessageCreate: ITypes.IEvent<Events.MessageCreate> = {
+export default {
   name: 'messageCreate',
   async execute(client, message) {
-    const prefix = "."
+    const prefix = process.env.PREFIX as string;
+	
+	if(!prefix) return
 
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
@@ -25,6 +27,4 @@ const MessageCreate: ITypes.IEvent<Events.MessageCreate> = {
       message.channel.send('❌ Komut çalıştırılırken bir hata oluştu.');
     }
   },
-}
-
-export default MessageCreate
+} as ITypes.IEvent<Events.MessageCreate>

@@ -1,5 +1,6 @@
 import { Events } from 'discord.js'
-const InteractionCreate : ITypes.IEvent<Events.InteractionCreate> = {
+
+export default {
     name: 'interactionCreate',
     async execute(client, interaction) {
         if (!interaction.isCommand()) return;
@@ -17,6 +18,4 @@ const InteractionCreate : ITypes.IEvent<Events.InteractionCreate> = {
             await interaction.reply({ content: 'Komut uygulanmıyor.', ephemeral: true });
         }
     },    
-}
-
-export default InteractionCreate
+} as ITypes.IEvent<Events.InteractionCreate>

@@ -12,6 +12,7 @@ Fill in the ` .env ` file within the project with your information:
 ```
 TOKEN = 
 BOT_ID = 
+PREFIX = 
 ```
 
 Usages:
