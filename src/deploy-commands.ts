@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { Routes, REST } from "discord.js";
+import { Routes, REST, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js";
 import { existsSync } from "fs";
 import { join } from "path";
 
@@ -7,9 +7,8 @@ import { getAllFiles } from "@/base"
 
  
 async function commandsDeploy() {
-	const { TOKEN, BOT_ID } = process.env
     try {
-		const ISlashCommands : any[] = []
+		const ISlashCommands : RESTPostAPIChatInputApplicationCommandsJSONBody[] = []
 		const rest = new REST({ version: '10' }).setToken(`${process.env.TOKEN}`);
 	
 		const commandsFilePath = join(__dirname, '.', 'commands', 'slash-commands');

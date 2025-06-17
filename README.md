@@ -5,6 +5,7 @@
 | Command | Comment |
 | ------ | ------ | 
 | npm start | Runs discord bot |
+| npm run deploy | deploy slash command loads to discord bot |
 
 Fill in the ` .env ` file within the project with your information:
 
