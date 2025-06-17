@@ -1,10 +1,10 @@
 import { SlashCommandBuilder } from "discord.js"
 
-const Hello : ITypes.ICommand = {
+const Hello : ITypes.ISlashCommand = {
     data: new SlashCommandBuilder()
     .setName('hello')
     .setDescription('say hello!'),
-    async execute(interaction :any) {
+    async execute(interaction:any) {
         await interaction.reply("hello there!")
     },
 }

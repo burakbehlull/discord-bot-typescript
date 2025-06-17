@@ -1,23 +1,23 @@
-import { Collection, Routes, REST } from "discord.js";
+import { Collection, Routes, REST, Client } from "discord.js";
 import 'dotenv/config'
 import { readdirSync, existsSync } from "fs";
 import { join } from "path";
 export class Utils {
-    private client:any;
-    private ICommands : any[];
-    commands = new Collection<string, ITypes.ICommand>()
+    private client: Client | any;
+    private ISlashCommands : any[];
+    slashCommands = new Collection<string, ITypes.ISlashCommand>()
+    prefixCommands = new Collection<string, ITypes.IPrefixCommand>()
     rest = new REST({version: '10'}).setToken(`${process.env.TOKEN}`);
-    constructor(client:any){
+	
+    constructor(client: Client){
         this.client = client
-        this.ICommands = []
+        this.ISlashCommands = []
     }
     async commandsDeploy(){
         try {
-            console.log('Komutanlar yüklenmeye başlandı.');
-        
             await this.rest.put(
               Routes.applicationCommands(`${process.env.BOT_ID}`),
-              { body: this.ICommands }
+              { body: this.ISlashCommands }
             );
         
             console.log('Komutlar başarıyla yüklendi.');
@@ -25,8 +25,8 @@ export class Utils {
             console.error(error);
           }
     }
-    loadCommands(){
-        const commandsFilePath = join(__dirname, '..', 'commands')
+	loadPrefixCommands(){
+        const commandsFilePath = join(__dirname, '..', 'commands', 'prefix-commands')
         if(!existsSync(commandsFilePath)){
             console.error('Commands klasörü mevcut değil.')
             return
@@ -34,11 +34,26 @@ export class Utils {
         const commandFiles = readdirSync(commandsFilePath).filter((file:any) => file.endsWith('.ts'));
         
         for (const file of commandFiles) {
-            const command = require(`../commands/${file}`);
+            const command = require(`../commands/prefix-commands/${file}`);
+            if(!command) continue
+            const c = command.default
+            this.prefixCommands.set(c.name, command?.default);
+        }
+    }
+    loadSlashCommands(){
+        const commandsFilePath = join(__dirname, '..', 'commands', 'slash-commands')
+        if(!existsSync(commandsFilePath)){
+            console.error('Commands klasörü mevcut değil.')
+            return
+        }
+        const commandFiles = readdirSync(commandsFilePath).filter((file:any) => file.endsWith('.ts'));
+        
+        for (const file of commandFiles) {
+            const command = require(`../commands/slash-commands/${file}`);
             if(!command) continue
             const c = command.default?.data
-            this.ICommands.push(c.toJSON());
-            this.commands.set(c.name, command?.default);
+            this.ISlashCommands.push(c.toJSON());
+            this.slashCommands.set(c.name, command?.default);
         }
         this.commandsDeploy()
     

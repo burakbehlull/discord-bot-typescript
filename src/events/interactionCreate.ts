@@ -3,7 +3,7 @@ const InteractionCreate : ITypes.IEvent<Events.InteractionCreate> = {
     name: 'interactionCreate',
     async execute(client, interaction) {
         if (!interaction.isCommand()) return;
-        const command = client.commands.get(interaction.commandName);
+        const command = client.slashCommands.get(interaction.commandName);
     
         if (!command) {
             console.log('Komut bulunamadı:', interaction.commandName);

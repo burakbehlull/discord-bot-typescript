@@ -1,17 +1,35 @@
-import { ClientEvents, SlashCommandBuilder } from "discord.js"
+import { ClientEvents, SlashCommandBuilder, Client, Message } from "discord.js"
 
 export {};
 
 declare global {
     namespace ITypes {
-        export interface ICommand {
+	
+		// prefix commands
+		export interface IPrefixCommand {
+			name: string,
+			usage?: string[];
+			description?: string;
+			execute: (commandArgs: PrefixCommandArgs) => Promise<unknown> | unknown;
+		}
+
+		export interface PrefixCommandArgs {
+			client: Client;
+			message: Message;
+			args?: string[];
+		}
+		
+		// slash commands
+        export interface ISlashCommand {
             data: SlashCommandBuilder,
-            execute: (interaction:CommandArgs)=> any;
+            execute: (interaction: SlashCommandArgs)=> any;
         }
         
-        export interface CommandArgs {
+        export interface SlashCommandArgs {
             interaction: any;
         }
+		
+		// events
         export type EventKeys = keyof ClientEvents;
         export interface IEvent<K extends EventKeys> {
             name: EventKeys;

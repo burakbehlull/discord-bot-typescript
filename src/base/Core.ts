@@ -29,7 +29,8 @@ class Core extends Client {
     connect(){
         this.login(process.env.TOKEN)
         this.utils.loadEvents()
-        this.utils.loadCommands()
+        this.utils.loadPrefixCommands()
+        this.utils.loadSlashCommands()
     }
 }
 
