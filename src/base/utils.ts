@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { readdirSync, existsSync, statSync } from "fs";
 import { join } from "path";
 
-function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
+export function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
     const files = readdirSync(dirPath);
 
     for (const file of files) {
@@ -20,26 +20,12 @@ function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
 
 export class Utils {
     private client: Client;
-    private ISlashCommands: any[];
     slashCommands = new Collection<string, ITypes.ISlashCommand>();
     prefixCommands = new Collection<string, ITypes.IPrefixCommand>();
     rest = new REST({ version: '10' }).setToken(`${process.env.TOKEN}`);
 
     constructor(client: Client) {
         this.client = client;
-        this.ISlashCommands = [];
-    }
-
-    async commandsDeploy() {
-        try {
-            await this.rest.put(
-                Routes.applicationCommands(`${process.env.BOT_ID}`),
-                { body: this.ISlashCommands }
-            );
-            console.log("Slash komutları başarıyla Discord API'ye yüklendi.");
-        } catch (error) {
-            console.error('Slash komutları yüklenirken hata oluştu:', error);
-        }
     }
 
     loadPrefixCommands() {
@@ -74,13 +60,11 @@ export class Utils {
             const command = require(filePath);
             if (!command) continue;
             const c = command.default?.data;
-            this.ISlashCommands.push(c.toJSON());
             this.slashCommands.set(c.name, command.default);
         }
 
         console.log(`[${this.slashCommands.size}] slash komutu yüklendi.`);
 
-        this.commandsDeploy();
     }
 
     loadEvents() {
