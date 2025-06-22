@@ -1,5 +1,3 @@
-import { SlashCommandBuilder } from "discord.js"
-
 const Hello : ITypes.IPrefixCommand = {
     name: 'hello',
     async execute({client, message}:ITypes.PrefixCommandArgs) {

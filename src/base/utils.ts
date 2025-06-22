@@ -1,5 +1,6 @@
 import { readdirSync, existsSync, statSync } from "fs";
 import { join } from "path";
+import "dotenv/config";
 
 export function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
 	const files = readdirSync(dirPath);
@@ -87,5 +88,14 @@ export class Utils {
 		}
 
 		console.log(`[${eventFiles.length}] event yüklendi.`);
+	}
+
+	login(){
+		const { TOKEN } = process.env as Record<string, string>;
+		if (!TOKEN) {
+			console.error("TOKEN çevresel değişkeni tanımlanmamış.");
+			return
+		}
+		this.client.login(TOKEN)
 	}
 }

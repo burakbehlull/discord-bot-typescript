@@ -1,5 +1,3 @@
-import { SlashCommandBuilder } from "discord.js"
-
 export default {
     name: 'ping',
     async execute({client, message}:ITypes.PrefixCommandArgs) {

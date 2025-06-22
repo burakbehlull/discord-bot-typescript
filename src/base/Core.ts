@@ -1,5 +1,4 @@
 import { Client as DiscordClient, GatewayIntentBits, ActivityType, Collection } from "discord.js";
-import "dotenv/config";
 import { Utils } from "@/base";
 
 class Core extends DiscordClient implements ITypes.IClient {
@@ -16,11 +15,12 @@ class Core extends DiscordClient implements ITypes.IClient {
 				activities: [{ name: "@burakbehull", type: ActivityType.Watching }],
 				status: "idle",
 			},
+			
 		});
 	}
 
 	connect() {
-		this.login(process.env.TOKEN);
+		this.utils.login()
 		this.utils.loadEvents();
 		this.utils.loadPrefixCommands();
 		this.utils.loadSlashCommands();
