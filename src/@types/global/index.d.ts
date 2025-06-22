@@ -1,10 +1,17 @@
-import { ClientEvents, SlashCommandBuilder, Client, Message, ChatInputCommandInteraction, 
+import { ClientEvents, SlashCommandBuilder, Client, Collection, Message, ChatInputCommandInteraction, 
 	UserContextMenuCommandInteraction, MessageContextMenuCommandInteraction } from "discord.js"
+import { Utils } from "@/base"
 
 export {};
 
 declare global {
     namespace ITypes {
+	
+		export interface IClient extends Client {
+			utils: Utils;
+			slashCommands: Collection<string, ISlashCommand>;
+			prefixCommands: Collection<string, IPrefixCommand>;
+		}
 	
 		// prefix commands
 		export interface IPrefixCommand {
@@ -15,7 +22,7 @@ declare global {
 		}
 
 		export interface PrefixCommandArgs {
-			client: Client;
+			client: IClient;
 			message: Message;
 			args?: string[];
 		}
@@ -27,7 +34,7 @@ declare global {
         }
         
         export interface SlashCommandArgs {
-			client: Client,
+			client: IClient,
             interaction: ChatInputCommandInteraction | UserContextMenuCommandInteraction | MessageContextMenuCommandInteraction;
         }
 		
@@ -36,7 +43,7 @@ declare global {
         export interface IEvent<K extends EventKeys> {
             name: EventKeys;
             once?: boolean;
-            execute: (client: Client | any, ...args: ClientEvents[K]) => Promise<void> | void | any;
+            execute: (client: IClient, ...args: ClientEvents[K]) => Promise<void> | void | any;
         }
     }
 }
