@@ -21,7 +21,7 @@ export default {
     if (!command) return;
 
     try {
-      await command.execute({ client, message, args, command: commandName });
+      await command.execute({ client, message, args });
     } catch (error) {
       console.error(`❌ Error executing command: ${commandName}`, error);
       message.channel.send('❌ Komut çalıştırılırken bir hata oluştu.');
