@@ -2,7 +2,7 @@ import { Client, GatewayIntentBits, ActivityType } from "discord.js";
 import 'dotenv/config'
 import { Utils } from '@/base'
 class Core extends Client {
-    utils = new Utils(this)
+    utils : Utils = new Utils(this)
     constructor(){
         super({
             intents: Object.keys(GatewayIntentBits).map(
