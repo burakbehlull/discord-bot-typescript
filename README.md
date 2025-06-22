@@ -39,6 +39,7 @@ export default {} as ITypes.ISlashCommand
 ### type usages:
 | type | comment | meets | use |
 | ------ | ------ | ------ | ------ |
+| **IClient** | Bot launch client | .. | use so; client: IClient |
 | **IPrefixCommand** | Used for prefix commands | name, execute | {name: "exampleCommand"} as IPrefixCommand |
 | **PrefixCommandArgs** | Is a type given to command values | client, message, args | execute({client, message, args} : PrefixCommandArgs){} |
 | **ISlashCommand** | Used for slash commands | data, execute | {name: "exampleCommand"} as ISlashCommand |
